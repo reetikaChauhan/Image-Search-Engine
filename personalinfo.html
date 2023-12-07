@@ -44,3 +44,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
+imagecards[i].classList.add('img-card')
+                imagecards[i].classList.remove('hide-img');
+                let imgcard =imagecards[i].getElementsByTagName("img")[0]
+                console.log(imgcard)
+                imgcard.setAttribute("src", 'images/loading-bar.png') 
+                imagecards[i].classList.add("loading")
+                allimages = true;
