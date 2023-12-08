@@ -1,8 +1,8 @@
 const generateform = document.querySelectorAll(".generate-form")[0];
-console.log(generateform)
+const inputfield = document.getElementsByTagName("input")[0];
+console.log(inputfield)
+const searchhistory = document.querySelectorAll(".searchhistoryList")[0]
 const imagecards = document.querySelectorAll(".img-card");
-const loginEle = document.getElementById("login");
-const logoutEle = document.getElementById("logout")
 const prev=document.querySelector(".prev");
 const next=document.querySelector(".next");
 const page=document.querySelector(".page-num");
@@ -11,11 +11,45 @@ const paginationdiv = document.querySelectorAll(".pagination")[0]
 const maxItem=8;
 let index=1;
 const API_KEY = ''
-//const client = createClient(API_KEY);
+inputfield.addEventListener("input",() =>{
+    const searchData = JSON.parse(localStorage.getItem("searchhistory"))
+    console.log(searchData)
+    if(searchData != null && searchhistory.classList.contains("hide")){
+        showsearchlist(searchData)  
+    }  
+})
+
+const showsearchlist = function(searchData){
+    searchhistory.classList.remove("hide")
+    searchData.forEach(element => {
+        const lielement = document.createElement('li');
+        lielement.innerHTML = element;
+        const spanelement = document.createElement("span")
+        spanelement.classList.add("icon")
+        const iconelement = document.createElement("i")
+        iconelement.classList.add("fas")
+        iconelement.classList.add("fa-trash")
+        spanelement.appendChild(iconelement)
+        lielement.appendChild(spanelement)
+        searchhistory.appendChild(lielement)
+        lielement.addEventListener("click",()=>{
+            document.getElementById("textfield").value = element
+        })
+        spanelement.addEventListener("click",(e) =>{
+            let index = searchData.indexOf(e.target.value)
+            searchData.splice(index,1)
+            localStorage.setItem("searchhistory",JSON.stringify(searchData))
+            searchhistory.removeChild(lielement)
+        })
+    });
+}
 generateform.addEventListener("submit",(e) =>{
     e.preventDefault();
+    searchhistory.classList.add("hide")
+    searchhistory.innerHTML = ""
     index=1;
     const usersearchtext = e.srcElement[0].value;
+    saveinlocalstorage(usersearchtext)
     const numberofimages = parseInt(e.srcElement[1].value);
     const imgquantity = document.querySelectorAll(".img-quantity")[0];
     if (numberofimages == 0){
@@ -48,11 +82,23 @@ generateform.addEventListener("submit",(e) =>{
             }
     }
     
-    
-    }
+}
     handleimagegeneration(usersearchtext,numberofimages)
 
 })
+const saveinlocalstorage = function(usersearchtext) {
+      const getlocaldata = localStorage.getItem("searchhistory")
+      if(getlocaldata == null){
+        searcharray = []
+      }
+      else{
+        searcharray = JSON.parse(getlocaldata)
+      }
+      searcharray.push(usersearchtext)
+      localStorage.setItem("searchhistory",JSON.stringify(searcharray))
+      
+      
+}
 
 const paginationfunc = function(){
     paginationdiv.classList.remove("hide-img")

@@ -7,7 +7,9 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
-
+.hide{
+  display: none;
+}
 .image-generator {
   height: 40vh;
   display: flex;
@@ -84,7 +86,46 @@
   background: none;
   font-size: 1rem;
 }
+/* /////////////////////////// */
 
+
+.wrapper{
+  width: 370px;
+  margin: 85px auto 0;
+}
+.generate-form .searchhistoryList{
+  width:100%;
+  max-height: fit-content;
+}
+.searchhistoryList li{
+  position: relative;
+  list-style: none;
+  margin-bottom: 8px;
+  background: #f2f2f2;
+  color:#000;
+  border-radius: 3px;
+  padding: 10px 15px;
+  cursor: default;
+  word-wrap: break-word;
+}
+.searchhistoryList li .icon{
+  position: absolute;
+  right: -45px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e74c3c;
+  width: 45px;
+  text-align: center;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 0 3px 3px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.wrapper.searchhistoryList li:hover .icon{
+  right: 0px;
+}
+/* /////////////////////////// */
 .generate-form .generate-btn {
   font-size: 1rem;
   outline: none;

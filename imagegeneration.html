@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel = 'stylesheet' href="style.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 </head>
 <body>
     <section class = "image-generator">
@@ -14,6 +14,7 @@
             <p> Convert your text into images using AI</p>
             <form action="#" class = "generate-form">
                 <input type="text" id = "textfield" class="prompt-input" placeholder="Describe your image in words">
+                
                 <div class="controls">
                     <select id = "numberofimages"class="img-quantity">
                         <option value = "0">Any</option>
@@ -27,6 +28,11 @@
             </form>
         </div>
     </section>
+    <div class="wrapper">
+        <ul class="searchhistoryList hide">
+            <!-- data  coming from local storage -->
+        </ul>
+    </div>
 <section class="image-gallery">
     <div class="img-card">
         <img src="images/img1.jpg" alt="image">
