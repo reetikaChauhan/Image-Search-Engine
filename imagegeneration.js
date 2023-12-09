@@ -7,7 +7,6 @@ const prev=document.querySelector(".prev");
 const next=document.querySelector(".next");
 const page=document.querySelector(".page-num");
 const paginationdiv = document.querySelectorAll(".pagination")[0]
-// pagination
 const maxItem=8;
 let index=1;
 const API_KEY = ''
@@ -18,6 +17,7 @@ inputfield.addEventListener("input",() =>{
         showsearchlist(searchData)  
     }  
 })
+
 
 const showsearchlist = function(searchData){
     searchhistory.classList.remove("hide")
@@ -49,43 +49,56 @@ generateform.addEventListener("submit",(e) =>{
     searchhistory.innerHTML = ""
     index=1;
     const usersearchtext = e.srcElement[0].value;
-    saveinlocalstorage(usersearchtext)
     const numberofimages = parseInt(e.srcElement[1].value);
     const imgquantity = document.querySelectorAll(".img-quantity")[0];
-    if (numberofimages == 0){
-        for(let i=0;i < imagecards.length;i++){
-            imagecards[i].classList.add('img-card')
-            imagecards[i].classList.remove('hide-img');
-            let imgcard =imagecards[i].getElementsByTagName("img")[0]
-            imgcard.setAttribute("src", 'images/loading-bar.png') 
-            imagecards[i].classList.add("loading")
-        }
-        checkfunc()
-        showfunc()
-        paginationfunc()
-    }
-    else{
-    paginationdiv.classList.add("hide-img")
-    for(let i=0;i < imagecards.length;i++){
-            if (i < numberofimages){
+    //  Form validation
+    if (formValidation(usersearchtext)){
+        saveinlocalstorage(usersearchtext)
+        // pagination API returns 15 images per request. Displaying in the form of pagination.
+        if (numberofimages == 0){
+            for(let i=0;i < imagecards.length;i++){
                 imagecards[i].classList.add('img-card')
                 imagecards[i].classList.remove('hide-img');
                 let imgcard =imagecards[i].getElementsByTagName("img")[0]
                 imgcard.setAttribute("src", 'images/loading-bar.png') 
                 imagecards[i].classList.add("loading")
-                
             }
-            else{
-                imagecards[i].classList.remove('img-card')
-                imagecards[i].classList.add('hide-img');
-                imagecards[i].classList.remove("show");
+            checkfunc()
+            showfunc()
+            paginationfunc()
+        }
+        else{
+        paginationdiv.classList.add("hide-img")
+        for(let i=0;i < imagecards.length;i++){
+                if (i < numberofimages){
+                    imagecards[i].classList.add('img-card')
+                    imagecards[i].classList.remove('hide-img');
+                    let imgcard =imagecards[i].getElementsByTagName("img")[0]
+                    imgcard.setAttribute("src", 'images/loading-bar.png') 
+                    imagecards[i].classList.add("loading")
+                    
+                }
+                else{
+                    imagecards[i].classList.remove('img-card')
+                    imagecards[i].classList.add('hide-img');
+                    imagecards[i].classList.remove("show");
+                }
             }
-    }
-    
-}
-    handleimagegeneration(usersearchtext,numberofimages)
-
+        
+        }
+    handleimagegeneration(usersearchtext)
+    }  
 })
+const formValidation = function(str){
+    const result = /^[A-Za-z]+$/.test(str)
+    if (result == false){
+        document.querySelectorAll(".error")[0].classList.remove("hide")
+        document.querySelectorAll(".error")[0].innerHTML = "No numbers or special characters allowed in search";
+        return false
+    }
+    document.querySelectorAll(".error")[0].classList.add("hide")
+    return true ;
+}
 const saveinlocalstorage = function(usersearchtext) {
       const getlocaldata = localStorage.getItem("searchhistory")
       if(getlocaldata == null){
@@ -152,9 +165,9 @@ page.innerHTML=index;
 }
 
 // Creating API request to 
-const handleimagegeneration = function(usersearchtext,numberofimages){
+const handleimagegeneration = function(usersearchtext){
     try {
-   fetch( `https://api.pexels.com/v1/search?query=${usersearchtext}?per_page=${10}`,{
+   fetch( `https://api.pexels.com/v1/search?query=${usersearchtext}?per_page=${15}`,{
         headers:{
             Authorization:API_KEY
         }
