@@ -17,6 +17,7 @@ class ImageGenerator{
         const imgquantity = document.querySelectorAll(".img-quantity")[0];
         //  Form validation
         if (Form.formValidation(usersearchtext)){
+            document.querySelectorAll(".error")[0].classList.add("hide")
             saveinlocalstorage(usersearchtext)
             // pagination API returns 15 images per request. Displaying in the form of pagination.
             if (numberofimages == 0){
@@ -50,28 +51,32 @@ class ImageGenerator{
                 }
             
             }
-        this.handleimagegeneration(usersearchtext)
-        }  
+        this.handleimagegeneration(usersearchtext,this.API_key)
+    } 
+    else{
+        document.querySelectorAll(".error")[0].classList.remove("hide")
+        document.querySelectorAll(".error")[0].innerHTML = "No numbers or special characters allowed in search";
+    }     
 
     }
   
-    handleimagegeneration(usersearchtext){
+    async handleimagegeneration(usersearchtext, API_key) {
         try {
-            fetch( `https://api.pexels.com/v1/search?query=${usersearchtext}?per_page=${10}`,{
-                 headers:{
-                     Authorization:this.API_key
-                 }
-            })
-              .then(resp =>{
-                 return resp.json()
-              })
-              .then(data =>{
-                 this.updateimages(data.photos);
-              })
-             } catch(error){
-                  console.log('did not work', error)
-             }
+          const response = await fetch(
+            `https://api.pexels.com/v1/search?query=${usersearchtext}&per_page=${15}`,
+            {
+              headers: {
+                Authorization: API_key,
+              },
+            }
+          );
+          const data = await response.json();
+          this.updateimages(data.photos);
+        } catch (error) {
+          console.error('This is the error:', error.message);
+        }
     }
+      
     updateimages(images){
         for(let i = 0; i < imagecards.length;i++ ){
             let imgcard =imagecards[i].getElementsByTagName("img")[0]
@@ -82,14 +87,7 @@ class ImageGenerator{
 }
 class Form {
     static  formValidation (str){
-        const result = /^[A-Za-z\s]*$/.test(str)
-        if (result == false){
-            document.querySelectorAll(".error")[0].classList.remove("hide")
-            document.querySelectorAll(".error")[0].innerHTML = "No numbers or special characters allowed in search";
-            return false
-        }
-        document.querySelectorAll(".error")[0].classList.add("hide")
-        return true ;
+        return /^[A-Za-z\s]*$/.test(str) ;
     }
 }
 const generateform = document.querySelectorAll(".generate-form")[0];
@@ -137,12 +135,16 @@ const saveinlocalstorage = function(usersearchtext){
     let searcharray = []
     const getlocaldata = localStorage.getItem("searchhistory")
     if(getlocaldata == null){
-        searcharray = []
+        searcharray.push(usersearchtext)
     }
     else{
         searcharray = JSON.parse(getlocaldata)
+        let index = searcharray.indexOf(usersearchtext)
+        if (index == -1){
+            searcharray.push(usersearchtext)
+        }
     }
-    searcharray.push(usersearchtext)
+    
     localStorage.setItem("searchhistory",JSON.stringify(searcharray))
 }
 const checkfunc = function(){
@@ -184,7 +186,6 @@ const paginationfunc = function(){
     })
     next.addEventListener("click",function(){
         image_generation.index = 2;
-        console.log("hello")
         checkfunc();
         showfunc();  
     })

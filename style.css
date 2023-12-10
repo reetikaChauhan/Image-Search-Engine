@@ -122,9 +122,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.wrapper.searchhistoryList li:hover .icon{
-  right: 0px;
-}
+
 /* /////////////////////////// */
 .generate-form .generate-btn {
   font-size: 1rem;
@@ -196,7 +194,14 @@
 .image-gallery .pagination .page{
 	color:gray;
 }
-.image-gallery .pagination .prev,.gallery .pagination .next{
+.image-gallery .pagination .prev{
+ color:#000;
+ border:1px solid #000;
+ font-size:15px;
+ padding:7px 15px;
+ cursor: pointer;
+}
+.gallery .pagination .next{
  color:#000;
  border:1px solid #000;
  font-size:15px;
@@ -213,9 +218,14 @@
 }
 
 
-.image-gallery .pagination .prev.disabled,
-.image-gallery .pagination .next.disabled{
+.image-gallery .pagination .prev.disabled
+{
 	border-color: gray;
+	color:gray;
+	pointer-events: none;
+}
+.image-gallery .pagination .next.disabled{
+  border-color: gray;
 	color:gray;
 	pointer-events: none;
 }
