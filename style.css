@@ -201,7 +201,7 @@
  padding:7px 15px;
  cursor: pointer;
 }
-.gallery .pagination .next{
+.image-gallery .pagination .next{
  color:#000;
  border:1px solid #000;
  font-size:15px;

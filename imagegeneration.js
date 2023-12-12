@@ -1,9 +1,7 @@
 class ImageGenerator{
     constructor(formEle){
         this.formEle = formEle
-        this.maxItem = 8
-        this.index = 1
-        this.API_key = ''
+        this.API_key = 'eXZJSOBCegwpEHDlocf1pUR4Ge7QIkf5a0O0PBTXEGIX7e9x34SfTvyR'
     }
     generateImages(e){
         e.preventDefault();
@@ -16,7 +14,7 @@ class ImageGenerator{
         const numberofimages = parseInt(e.srcElement[1].value);
         const imgquantity = document.querySelectorAll(".img-quantity")[0];
         //  Form validation
-        if (Form.formValidation(usersearchtext)){
+        if (formValidation(usersearchtext)){
             document.querySelectorAll(".error")[0].classList.add("hide")
             saveinlocalstorage(usersearchtext)
             // pagination API returns 15 images per request. Displaying in the form of pagination.
@@ -28,9 +26,9 @@ class ImageGenerator{
                     imgcard.setAttribute("src", 'images/loading-bar.png') 
                     imagecards[i].classList.add("loading")
                 }
-                checkfunc()
-                showfunc()
-                paginationfunc()
+                Paginator.checkfunc()
+                Paginator.showfunc()
+                Paginator.paginationfunc()
             }
             else{
             paginationdiv.classList.add("hide-img")
@@ -85,20 +83,63 @@ class ImageGenerator{
     }
     }
 }
-class Form {
-    static  formValidation (str){
-        return /^[A-Za-z\s]*$/.test(str) ;
+class Paginator{
+    static checkfunc(){
+        if(index==2){
+            next.classList.add("disabled");
+        }
+        else{
+        next.classList.remove("disabled");	
+        }
+    
+        if(index==1){
+            prev.classList.add("disabled");
+        }
+        else{
+        prev.classList.remove("disabled");	
+        }
+    }
+    static showfunc (){
+        for (let i = 0 ;i < imagecards.length; i++){
+            imagecards[i].classList.remove("show");
+            imagecards[i].classList.remove("img-card");
+            imagecards[i].classList.add("hide-img");
+            if(i>=(index*maxItem)-maxItem && i<index*maxItem){
+                imagecards[i].classList.remove("hide-img");
+                imagecards[i].classList.add("img-card");
+                imagecards[i].classList.add("show");
+            }
+           
+        }
+        page.innerHTML=index;
+    }
+    static paginationfunc (){
+        paginationdiv.classList.remove("hide-img")
+        prev.addEventListener("click",function(){
+            index = 1;
+            Paginator.checkfunc();
+            Paginator.showfunc();
+        })
+        next.addEventListener("click",function(){
+            index = 2;
+            Paginator.checkfunc();
+            Paginator.showfunc();  
+        })
     }
 }
+
 const generateform = document.querySelectorAll(".generate-form")[0];
 const inputfield = document.getElementsByTagName("input")[0];
 const searchhistory = document.querySelectorAll(".searchhistoryList")[0]
 const imagecards = document.querySelectorAll(".img-card");
 const prev=document.querySelector(".prev");
 const next=document.querySelector(".next");
+console.log(next)
 const page=document.querySelector(".page-num");
 const paginationdiv = document.querySelectorAll(".pagination")[0]
 const image_generation = new ImageGenerator(generateform)
+let index = 1
+const maxItem = 8
 const showSearches = function(){
     const searchData = JSON.parse(localStorage.getItem("searchhistory"))
     if(searchData != null && searchhistory.classList.contains("hide")){
@@ -130,6 +171,9 @@ const showsearchlist = function(searchData){
         })
     });
 }
+const formValidation = function (str){
+    return /^[A-Za-z\s]*$/.test(str) ;
+}
 
 const saveinlocalstorage = function(usersearchtext){
     let searcharray = []
@@ -147,49 +191,9 @@ const saveinlocalstorage = function(usersearchtext){
     
     localStorage.setItem("searchhistory",JSON.stringify(searcharray))
 }
-const checkfunc = function(){
-    const pagination=Math.ceil(imagecards.length/this.maxItem);
-    if(image_generation.index>=pagination){
-        next.classList.add("disabled");
-    }
-    else{
-    next.classList.remove("disabled");	
-    }
 
-    if(image_generation.index<=1){
-        prev.classList.add("disabled");
-    }
-    else{
-    prev.classList.remove("disabled");	
-    }
-}
-const showfunc = function(){
-    for (let i = 0 ;i < imagecards.length; i++){
-        imagecards[i].classList.remove("show");
-        imagecards[i].classList.remove("img-card");
-        imagecards[i].classList.add("hide-img");
-        if(i>=(image_generation.index*image_generation.maxItem)-image_generation.maxItem && i<image_generation.index*image_generation.maxItem){
-            imagecards[i].classList.remove("hide-img");
-            imagecards[i].classList.add("img-card");
-            imagecards[i].classList.add("show");
-        }
-       
-    }
-    page.innerHTML=image_generation.index;
-}
-const paginationfunc = function(){
-    paginationdiv.classList.remove("hide-img")
-    prev.addEventListener("click",function(){
-        image_generation.index = 1;
-        checkfunc();
-        showfunc();
-    })
-    next.addEventListener("click",function(){
-        image_generation.index = 2;
-        checkfunc();
-        showfunc();  
-    })
-}
+
+
 inputfield.addEventListener("input",() =>{
     showSearches()
 });
