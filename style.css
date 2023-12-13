@@ -60,6 +60,7 @@
   border-radius: 30px;
   margin-top: 45px;
   justify-content: space-between;
+  width: 550px;
 }
 
 .generate-form .prompt-input {
